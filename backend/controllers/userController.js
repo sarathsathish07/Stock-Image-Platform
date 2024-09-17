@@ -89,17 +89,22 @@ const updateUserProfile = expressAsyncHandler(async (req,res)=>{
     throw new Error('User not found')
   }
 })
+
 const uploadUserImages = expressAsyncHandler(async (req, res) => {
   
   console.log("6");
   
   const user = await User.findById(req.user._id);
+  console.log(user);
+  
 
   if (user) {
     const newImages = req.files.map((file, index) => ({
       fileName: file.filename,
       title: req.body.titles[index],
     }));
+    console.log(newImages);
+    
 
     user.images.push(...newImages);
     await user.save();
