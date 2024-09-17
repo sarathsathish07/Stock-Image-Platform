@@ -6,12 +6,12 @@ const generateToken = (res,userId)=>{
   })
 
   res.cookie('jwt', token, {
-    httpOnly: true,  
-    secure: process.env.NODE_ENV === 'production',  
-    sameSite: 'lax',  
+    httpOnly: true,
+    secure: true, 
+    sameSite: 'None', 
     maxAge: 30 * 24 * 60 * 60 * 1000,
-    path: '/'  
-  })
+    path: '/'
+  });
 }
 
 export default generateToken
