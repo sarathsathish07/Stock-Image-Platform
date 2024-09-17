@@ -5,7 +5,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const HomeScreen = () => {
-  const [uploadedImagesState, setUploadedImagesState] = useState([]); // State for uploaded images
+  const [uploadedImagesState, setUploadedImagesState] = useState([]);
   const [newImages, setNewImages] = useState([]);  const [titles, setTitles] = useState([]);
   const [showUploadForm, setShowUploadForm] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -32,7 +32,7 @@ const HomeScreen = () => {
   const handleUpload = async () => {
     const formData = new FormData();
 
-    images.forEach((image, index) => {
+    newImages.forEach((image, index) => {
       formData.append('images', image);
       formData.append('titles', titles[index] || '');
     });
