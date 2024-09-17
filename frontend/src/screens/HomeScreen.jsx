@@ -3,6 +3,7 @@ import { useUploadImagesMutation, useGetUploadedImagesQuery, useEditImageMutatio
 import { Row, Col, Container, Button, Form, Modal } from 'react-bootstrap';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { toast } from 'react-toastify'; 
 
 const HomeScreen = () => {
   const [uploadedImagesState, setUploadedImagesState] = useState([]);
@@ -30,15 +31,8 @@ const HomeScreen = () => {
   };
 
   const handleUpload = async () => {
-   
-
-    const missingTitles = titles.some((title) => !title || title.trim() === '');
-
-    if (missingTitles) {
-      toast.error('Please provide titles for all images before uploading.');
-      return; 
-    }
     const formData = new FormData();
+
     newImages.forEach((image, index) => {
       formData.append('images', image);
       formData.append('titles', titles[index] || '');
@@ -46,10 +40,15 @@ const HomeScreen = () => {
 
     try {
       await uploadImages(formData);
-      console.log('Images uploaded successfully');
-      refetch(); 
+      toast.success('Images uploaded successfully');  // Success toast
+      refetch();
     } catch (error) {
       console.error('Error uploading images:', error);
+      if (error?.data?.message) {
+        toast.error(error.data.message);  // Show error toast from server response
+      } else {
+        toast.error('Error uploading images. Please try again.');
+      }
     }
   };
 

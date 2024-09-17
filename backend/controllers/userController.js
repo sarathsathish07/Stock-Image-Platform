@@ -97,27 +97,41 @@ const uploadUserImages = expressAsyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
   console.log(user);
   
-
-  if (user) {
-    const newImages = req.files.map((file, index) => ({
-      fileName: file.filename,
-      title: req.body.titles[index],
-    }));
-    console.log(newImages);
-    
-
-    user.images.push(...newImages);
-    await user.save();
-
-    res.json({
-      message: 'Images uploaded successfully',
-      images: user.images,
-    });
-  } else {
+  if (!user) {
     res.status(404);
     throw new Error('User not found');
   }
+
+  // Validate that a title is provided for each image
+  const titles = req.body.titles;
+
+  if (!titles || titles.length !== req.files.length) {
+    res.status(400);
+    throw new Error('Each image must have a corresponding title');
+  }
+
+  const hasEmptyTitle = titles.some((title) => !title.trim());
+  if (hasEmptyTitle) {
+    res.status(400);
+    throw new Error('All images must have non-empty titles');
+  }
+
+  const newImages = req.files.map((file, index) => ({
+    fileName: file.filename,
+    title: titles[index],
+  }));
+  
+  console.log(newImages);
+
+  user.images.push(...newImages);
+  await user.save();
+
+  res.json({
+    message: 'Images uploaded successfully',
+    images: user.images,
+  });
 });
+
 
 const getImages = expressAsyncHandler(async (req,res)=>{
   const user = await User.findById(req.user._id);
