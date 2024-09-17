@@ -5,8 +5,8 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const HomeScreen = () => {
-  const [images, setImages] = useState([]);
-  const [titles, setTitles] = useState([]);
+  const [uploadedImagesState, setUploadedImagesState] = useState([]); // State for uploaded images
+  const [newImages, setNewImages] = useState([]);  const [titles, setTitles] = useState([]);
   const [showUploadForm, setShowUploadForm] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editImageDetails, setEditImageDetails] = useState(null);
@@ -20,8 +20,8 @@ const HomeScreen = () => {
   const { data: uploadedImages, isLoading, isError, refetch } = useGetUploadedImagesQuery();
 
   const handleImageChange = (e) => {
-    setImages([...e.target.files]);
-  };
+    setNewImages([...e.target.files]); 
+    };
 
   const handleTitleChange = (e, index) => {
     const newTitles = [...titles];
@@ -95,7 +95,7 @@ const HomeScreen = () => {
   
     
   
-    setImages(reorderedImages);
+    setUploadedImagesState(reorderedImages);
     const imageOrder = reorderedImages.map((img) => img._id); 
   
     try {
@@ -108,7 +108,7 @@ const HomeScreen = () => {
   };
   useEffect(() => {
     if (uploadedImages && uploadedImages.images) {
-      setImages(uploadedImages.images); // Set the images state when data is fetched
+      setUploadedImagesState(uploadedImages.images); // Set the images state when data is fetched
     }
   }, [uploadedImages]);
   
@@ -129,7 +129,7 @@ const HomeScreen = () => {
       {showUploadForm && (
         <div>
           <input type="file" multiple onChange={handleImageChange} />
-          {images.map((image, index) => (
+          {newImages.map((image, index) => (
             <div key={index}>
               <input
                 type="text"
@@ -152,8 +152,7 @@ const HomeScreen = () => {
       <Droppable droppableId="images">
         {(provided) => (
           <Row {...provided.droppableProps} ref={provided.innerRef}>
-          {images?.map((image, index) => (
-             image?._id ? (
+          {uploadedImagesState?.map((image, index) => (
             <Draggable key={image._id.toString()} draggableId={image._id.toString()} index={index}>
               {(provided) => (
                 <Col 
@@ -180,9 +179,6 @@ const HomeScreen = () => {
                 </Col>
               )}
             </Draggable>
-            ) : (
-              <p key={index}>Invalid image data</p>  // Optionally render a fallback UI for invalid images
-            )
           ))}
           {provided.placeholder}
         </Row>
