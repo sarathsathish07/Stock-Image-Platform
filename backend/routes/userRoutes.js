@@ -2,7 +2,6 @@ import express from 'express';
 import { authUser,
   registerUser,
   logoutUser,
-  getUserProfile,
   updateUserProfile,
   uploadUserImages,
   getImages,
@@ -21,7 +20,7 @@ router.put('/upload',upload.array('images', 10),protect, uploadUserImages);
 router.put('/images/:id', upload.single('image'),protect, updateImage);
 router.route('/images/:id').delete(protect, deleteImage);
 router.put('/images/order', protect, updateImageOrder);
-router.route('/profile').get(protect,getUserProfile).put(protect,updateUserProfile);
+router.route('/profile').put(protect,updateUserProfile);
 
 router.post('/',registerUser)
 

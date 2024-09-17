@@ -60,15 +60,17 @@ const logoutUser = expressAsyncHandler(async (req,res)=>{
   })
   res.status(200).json({message:"User logged out"})
 })
-const getUserProfile = expressAsyncHandler(async (req,res)=>{
-  const user = {
-    _id:req.user._id,
-    name:req.user.name,
-    email:req.user.email
-  }
-  res.status(200).json(user)
-})
+// const getUserProfile = expressAsyncHandler(async (req,res)=>{
+//   const user = {
+//     _id:req.user._id,
+//     name:req.user.name,
+//     email:req.user.email
+//   }
+//   res.status(200).json(user)
+// })
 const updateUserProfile = expressAsyncHandler(async (req,res)=>{
+  console.log("2");
+  
   const user = await User.findById(req.user._id)
   if(user){
     user.name = req.body.name || user.name
@@ -76,15 +78,11 @@ const updateUserProfile = expressAsyncHandler(async (req,res)=>{
     if(req.body.password){
       user.password = req.body.password
     }
-    if(req.file){
-      user.profileImageName = req.file.filename || user.profileImageName;
-  }
     const updatedUser = await user.save()
     res.status(200).json({
       _id:updatedUser._id,
       name:updatedUser.name,
       email:updatedUser.email,
-      profileImageName:updatedUser.profileImageName
     })
   }else{
     res.status(404)
@@ -93,6 +91,7 @@ const updateUserProfile = expressAsyncHandler(async (req,res)=>{
 })
 const uploadUserImages = expressAsyncHandler(async (req, res) => {
   
+  console.log("6");
   
   const user = await User.findById(req.user._id);
 
@@ -232,7 +231,7 @@ export {
   authUser,
   registerUser,
   logoutUser,
-  getUserProfile,
+  // getUserProfile,
   updateUserProfile,
   uploadUserImages,
   getImages,

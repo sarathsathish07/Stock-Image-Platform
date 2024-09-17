@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
 import { useDispatch, useSelector } from "react-redux";
@@ -45,8 +46,12 @@ const ProfileScreen = () => {
       formData.append('name', name);
       formData.append('email', email);
       formData.append('password', password);
-  const responseFromApiCall = await updateProfile(formData).unwrap();
-  dispatch(setCredentials({...responseFromApiCall}))
+      const responseFromApiCall = await updateProfile({
+        name,
+        email,
+        password,
+      }).unwrap();
+        dispatch(setCredentials({...responseFromApiCall}))
   toast.success('Profile Updated Succesfully')
      } catch (error) {
         console.log(error.data.message);
@@ -57,6 +62,7 @@ const ProfileScreen = () => {
 
   return (
     <FormContainer>
+      
       <h1>Update Profile</h1>
       <Form onSubmit={submitHandler}>
         <Form.Group className="my-2" controlId="name">
@@ -97,6 +103,8 @@ const ProfileScreen = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
           ></Form.Control>
         </Form.Group>
+
+        
 
         {isLoading && <Loader/>}
 
