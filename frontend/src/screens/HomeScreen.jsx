@@ -3,7 +3,6 @@ import { useUploadImagesMutation, useGetUploadedImagesQuery, useEditImageMutatio
 import { Row, Col, Container, Button, Form, Modal } from 'react-bootstrap';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { toast } from 'react-toastify'; 
 
 const HomeScreen = () => {
   const [uploadedImagesState, setUploadedImagesState] = useState([]);
@@ -40,15 +39,10 @@ const HomeScreen = () => {
 
     try {
       await uploadImages(formData);
-      toast.success('Images uploaded successfully');  // Success toast
-      refetch();
+      console.log('Images uploaded successfully');
+      refetch(); 
     } catch (error) {
       console.error('Error uploading images:', error);
-      if (error?.data?.message) {
-        toast.error(error.data.message);  // Show error toast from server response
-      } else {
-        toast.error('Error uploading images. Please try again.');
-      }
     }
   };
 
