@@ -21,9 +21,10 @@ router.put('/upload',upload.array('images', 10),protect, uploadUserImages);
 router.put('/images/:id', upload.single('image'),protect, updateImage);
 router.route('/images/:id').delete(protect, deleteImage);
 router.put('/images/order', protect, updateImageOrder);
+router.route('/profile').get(protect,getUserProfile).put(protect,updateUserProfile);
+
 router.post('/',registerUser)
 
 router.post('/logout',logoutUser)
-router.route('/profile').get(protect,getUserProfile).put(protect,updateUserProfile);
 
 export default router
