@@ -38,6 +38,7 @@ const HomeScreen = () => {
     });
 
     try {
+      setShowUploadForm(false)
       await uploadImages(formData);
       console.log('Images uploaded successfully');
       refetch(); 
@@ -120,7 +121,7 @@ const HomeScreen = () => {
   return (
     <Container>
       <Button 
-        onClick={() => setShowUploadForm(!showUploadForm)} 
+        onClick={() => setShowUploadForm(true)} 
         className="mb-3"
       >
         Upload Image
