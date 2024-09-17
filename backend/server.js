@@ -11,10 +11,9 @@ import cookieParser from 'cookie-parser'
 connectDB()
 
 const app=express()
-const allowedOrigins = ['https://stock-image-platform.vercel.app'];
 
 app.use(cors({
-  origin: allowedOrigins,
+  origin: ['https://stock-image-platform.vercel.app',"http://localhost:3000"],
   credentials: true, 
 }));
 

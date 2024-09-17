@@ -163,7 +163,7 @@ const HomeScreen = () => {
                   {...provided.dragHandleProps} 
                 >
                   <div className="image-container">
-                    <img src={`http://localhost:5000/uploads/${image.fileName}`} alt={image.title} />
+                    <img src={`https://stock-image-platform.onrender.com/uploads/${image.fileName}`} alt={image.title} />
                   </div>
                   <div style={{display: "flex", justifyContent: "space-between"}}>
                     <p>{image.title}</p>
@@ -196,7 +196,7 @@ const HomeScreen = () => {
           </Modal.Header>
           <Modal.Body>
             <img
-              src={`http://localhost:5000/uploads/${editImageDetails.fileName}`}
+              src={`https://stock-image-platform.onrender.com/uploads/${editImageDetails.fileName}`}
               alt={editImageDetails.title}
               style={{ width: '100%', marginBottom: '15px' }}
             />
