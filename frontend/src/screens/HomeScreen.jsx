@@ -30,8 +30,15 @@ const HomeScreen = () => {
   };
 
   const handleUpload = async () => {
-    const formData = new FormData();
+   
 
+    const missingTitles = titles.some((title) => !title || title.trim() === '');
+
+    if (missingTitles) {
+      toast.error('Please provide titles for all images before uploading.');
+      return; 
+    }
+    const formData = new FormData();
     newImages.forEach((image, index) => {
       formData.append('images', image);
       formData.append('titles', titles[index] || '');
@@ -108,7 +115,7 @@ const HomeScreen = () => {
   };
   useEffect(() => {
     if (uploadedImages && uploadedImages.images) {
-      setUploadedImagesState(uploadedImages.images); // Set the images state when data is fetched
+      setUploadedImagesState(uploadedImages.images); 
     }
   }, [uploadedImages]);
   
@@ -134,6 +141,7 @@ const HomeScreen = () => {
               <input
                 type="text"
                 placeholder="Enter title"
+                className='my-3'
                 onChange={(e) => handleTitleChange(e, index)}
               />
             </div>
