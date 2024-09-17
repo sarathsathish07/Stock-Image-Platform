@@ -153,6 +153,7 @@ const HomeScreen = () => {
         {(provided) => (
           <Row {...provided.droppableProps} ref={provided.innerRef}>
           {images?.map((image, index) => (
+             image?._id ? (
             <Draggable key={image._id.toString()} draggableId={image._id.toString()} index={index}>
               {(provided) => (
                 <Col 
@@ -179,6 +180,9 @@ const HomeScreen = () => {
                 </Col>
               )}
             </Draggable>
+            ) : (
+              <p key={index}>Invalid image data</p>  // Optionally render a fallback UI for invalid images
+            )
           ))}
           {provided.placeholder}
         </Row>
