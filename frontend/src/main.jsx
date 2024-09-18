@@ -15,11 +15,8 @@ import {Provider} from 'react-redux'
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App></App>}>
-      <Route index path="/" element={<HomeScreen></HomeScreen>}></Route>
-      <Route
-        path="/login"
-        element={<LoginScreen></LoginScreen>}
-      ></Route>
+       <Route index path="/" element={<LoginScreen />} />
+       <Route path="/home" element={<HomeScreen />} />
       <Route
         path="/register"
         element={<RegisterScreen></RegisterScreen>}

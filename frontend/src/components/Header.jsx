@@ -27,7 +27,7 @@ const Header = () => {
     <header>
       <Navbar bg='dark' variant='dark' expand='lg' collapseOnSelect>
         <Container>
-          <LinkContainer to='/'>
+          <LinkContainer to='/home'>
           <Navbar.Brand> REACT</Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
@@ -48,7 +48,7 @@ const Header = () => {
                 </>
               ) : (
                 <>
-                <LinkContainer to='/login'>
+                <LinkContainer to='/'>
               <Nav.Link>
                 <FaSignInAlt /> Sign In
               </Nav.Link>

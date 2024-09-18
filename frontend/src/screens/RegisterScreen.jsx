@@ -23,7 +23,7 @@ const RegisterScreen = () => {
 
   useEffect(() => {
     if (userInfo) {
-      navigate('/');
+      navigate('/home');
     }
   }, [navigate, userInfo]);
 
@@ -53,7 +53,7 @@ const RegisterScreen = () => {
 
     try {
       const res = await register({ name, email, password }).unwrap();
-      navigate('/login');
+      navigate('/');
     } catch (error) {
       toast.error(error?.data?.message || error.error);
     }
@@ -111,7 +111,7 @@ const RegisterScreen = () => {
 
         <Row className="py-3">
           <Col>
-            Already have an account? <Link to='/login'>Login</Link>
+            Already have an account? <Link to='/'>Login</Link>
           </Col>
         </Row>
       </Form>
