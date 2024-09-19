@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import Loader from '../components/Loader';
+import Loader from "../components/Loader";
 import { useRegisterMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
 
 const RegisterScreen = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -23,7 +23,7 @@ const RegisterScreen = () => {
 
   useEffect(() => {
     if (userInfo) {
-      navigate('/home');
+      navigate("/home");
     }
   }, [navigate, userInfo]);
 
@@ -31,29 +31,29 @@ const RegisterScreen = () => {
     e.preventDefault();
 
     if (!name || !email || !password || !confirmPassword) {
-      toast.error('All fields are required');
+      toast.error("All fields are required");
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      toast.error('Please enter a valid email address');
+      toast.error("Please enter a valid email address");
       return;
     }
 
     if (password.length < 6) {
-      toast.error('Password must be at least 6 characters long');
+      toast.error("Password must be at least 6 characters long");
       return;
     }
 
     if (password !== confirmPassword) {
-      toast.error('Passwords do not match');
+      toast.error("Passwords do not match");
       return;
     }
 
     try {
       const res = await register({ name, email, password }).unwrap();
-      navigate('/');
+      navigate("/");
     } catch (error) {
       toast.error(error?.data?.message || error.error);
     }
@@ -63,44 +63,44 @@ const RegisterScreen = () => {
     <FormContainer>
       <h1>Sign Up</h1>
       <Form onSubmit={submitHandler}>
-        <Form.Group className="my-2" controlId='name'>
+        <Form.Group className="my-2" controlId="name">
           <Form.Label>Name</Form.Label>
           <Form.Control
             type="text"
             placeholder="Enter Name"
             value={name}
-            onChange={(e) => setName(e.target.value)}>
-          </Form.Control>
+            onChange={(e) => setName(e.target.value)}
+          ></Form.Control>
         </Form.Group>
 
-        <Form.Group className="my-2" controlId='email'>
+        <Form.Group className="my-2" controlId="email">
           <Form.Label>Email Address</Form.Label>
           <Form.Control
             type="email"
             placeholder="Enter Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}>
-          </Form.Control>
+            onChange={(e) => setEmail(e.target.value)}
+          ></Form.Control>
         </Form.Group>
 
-        <Form.Group className="my-2" controlId='password'>
+        <Form.Group className="my-2" controlId="password">
           <Form.Label>Password</Form.Label>
           <Form.Control
             type="password"
             placeholder="Enter Password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}>
-          </Form.Control>
+            onChange={(e) => setPassword(e.target.value)}
+          ></Form.Control>
         </Form.Group>
 
-        <Form.Group className="my-2" controlId='confirmPassword'>
+        <Form.Group className="my-2" controlId="confirmPassword">
           <Form.Label>Confirm Password</Form.Label>
           <Form.Control
             type="password"
             placeholder="Confirm Password"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}>
-          </Form.Control>
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          ></Form.Control>
         </Form.Group>
 
         {isLoading && <Loader />}
@@ -111,12 +111,12 @@ const RegisterScreen = () => {
 
         <Row className="py-3">
           <Col>
-            Already have an account? <Link to='/'>Login</Link>
+            Already have an account? <Link to="/">Login</Link>
           </Col>
         </Row>
       </Form>
     </FormContainer>
   );
-}
+};
 
 export default RegisterScreen;

@@ -9,7 +9,6 @@ import { setCredentials } from "../slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { useUpdateUserMutation } from "../slices/usersApiSlice";
 
-
 const ProfileScreen = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -19,7 +18,7 @@ const ProfileScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { userInfo } = useSelector((state) => state.auth);
-  const [updateProfile, { isLoading }] = useUpdateUserMutation()
+  const [updateProfile, { isLoading }] = useUpdateUserMutation();
   useEffect(() => {
     setName(userInfo.name);
     setEmail(userInfo.email);
@@ -28,41 +27,40 @@ const ProfileScreen = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const nameRegex = /^[A-Za-z\s'-]+$/
-    if(!nameRegex.test(name)){
-      toast.error('Name is not valid')
-      return
+    const nameRegex = /^[A-Za-z\s'-]+$/;
+    if (!nameRegex.test(name)) {
+      toast.error("Name is not valid");
+      return;
     }
-    if(!emailRegex.test(email)){
-      toast.error("Email Not Valid")
-      return
+    if (!emailRegex.test(email)) {
+      toast.error("Email Not Valid");
+      return;
     }
     if (password !== confirmPassword) {
       toast.error("Passwords donot match");
     } else {
-     try {
-      const formData = new FormData();
+      try {
+        const formData = new FormData();
 
-      formData.append('name', name);
-      formData.append('email', email);
-      formData.append('password', password);
-      const responseFromApiCall = await updateProfile({
-        name,
-        email,
-        password,
-      }).unwrap();
-        dispatch(setCredentials({...responseFromApiCall}))
-  toast.success('Profile Updated Succesfully')
-     } catch (error) {
+        formData.append("name", name);
+        formData.append("email", email);
+        formData.append("password", password);
+        const responseFromApiCall = await updateProfile({
+          name,
+          email,
+          password,
+        }).unwrap();
+        dispatch(setCredentials({ ...responseFromApiCall }));
+        toast.success("Profile Updated Succesfully");
+      } catch (error) {
         console.log(error.data.message);
-        toast.error("An error occured")
-     }
+        toast.error("An error occured");
+      }
     }
   };
 
   return (
     <FormContainer>
-      
       <h1>Update Profile</h1>
       <Form onSubmit={submitHandler}>
         <Form.Group className="my-2" controlId="name">
@@ -104,9 +102,7 @@ const ProfileScreen = () => {
           ></Form.Control>
         </Form.Group>
 
-        
-
-        {isLoading && <Loader/>}
+        {isLoading && <Loader />}
 
         <Button type="submit" variant="primary" className="mt-3">
           Update

@@ -1,15 +1,14 @@
-import multer from 'multer';
-import path from 'path';
+import multer from "multer";
+import path from "path";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
 const storage = multer.diskStorage({
   destination(req, file, cb) {
-    const uploadPath = path.join(__dirname, '..', 'public', 'uploads');
-    cb(null, uploadPath); 
+    const uploadPath = path.join(__dirname, "..", "public", "uploads");
+    cb(null, uploadPath);
   },
   filename(req, file, cb) {
     cb(null, `${Date.now()}-${file.originalname}`);
@@ -24,7 +23,7 @@ const fileFilter = (req, file, cb) => {
   if (mimetype && extname) {
     return cb(null, true);
   } else {
-    cb('Images only!');
+    cb("Images only!");
   }
 };
 

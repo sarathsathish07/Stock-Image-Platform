@@ -1,27 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { useUploadImagesMutation, useGetUploadedImagesQuery, useEditImageMutation, useDeleteImageMutation,useUpdateImageOrderMutation } from '../slices/usersApiSlice';
-import { Row, Col, Container, Button, Form, Modal } from 'react-bootstrap';
-import { FaEdit, FaTrash } from 'react-icons/fa';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import React, { useState, useEffect } from "react";
+import {
+  useUploadImagesMutation,
+  useGetUploadedImagesQuery,
+  useEditImageMutation,
+  useDeleteImageMutation,
+  useUpdateImageOrderMutation,
+} from "../slices/usersApiSlice";
+import { Row, Col, Container, Button, Form, Modal } from "react-bootstrap";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { toast } from 'react-toastify';
 
 const HomeScreen = () => {
   const [uploadedImagesState, setUploadedImagesState] = useState([]);
-  const [newImages, setNewImages] = useState([]);  const [titles, setTitles] = useState([]);
+  const [newImages, setNewImages] = useState([]);
+  const [titles, setTitles] = useState([]);
   const [showUploadForm, setShowUploadForm] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editImageDetails, setEditImageDetails] = useState(null);
-  const [newTitle, setNewTitle] = useState('');
+  const [newTitle, setNewTitle] = useState("");
   const [newImage, setNewImage] = useState(null);
   const [uploadImages] = useUploadImagesMutation();
   const [editImage] = useEditImageMutation();
   const [deleteImage] = useDeleteImageMutation();
-  const [updateImageOrder] = useUpdateImageOrderMutation(); 
+  const [updateImageOrder] = useUpdateImageOrderMutation();
 
-  const { data: uploadedImages, isLoading, isError, refetch } = useGetUploadedImagesQuery();
+  const {
+    data: uploadedImages,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetUploadedImagesQuery();
 
   const handleImageChange = (e) => {
-    setNewImages([...e.target.files]); 
-    };
+    setNewImages([...e.target.files]);
+  };
 
   const handleTitleChange = (e, index) => {
     const newTitles = [...titles];
@@ -30,20 +43,25 @@ const HomeScreen = () => {
   };
 
   const handleUpload = async () => {
+    if (titles.some((title) => !title)) {
+      toast.error("Please provide titles for all images before uploading.", {
+      });
+      return; 
+    }
     const formData = new FormData();
 
     newImages.forEach((image, index) => {
-      formData.append('images', image);
-      formData.append('titles', titles[index] || '');
+      formData.append("images", image);
+      formData.append("titles", titles[index] || "");
     });
 
     try {
-      setShowUploadForm(false)
+      setShowUploadForm(false);
       await uploadImages(formData);
-      console.log('Images uploaded successfully');
-      refetch(); 
+      console.log("Images uploaded successfully");
+      refetch();
     } catch (error) {
-      console.error('Error uploading images:', error);
+      console.error("Error uploading images:", error);
     }
   };
 
@@ -57,19 +75,19 @@ const HomeScreen = () => {
   const handleSaveEdit = async () => {
     if (editImageDetails) {
       const formData = new FormData();
-      formData.append('id', editImageDetails._id);
-      formData.append('title', newTitle);
+      formData.append("id", editImageDetails._id);
+      formData.append("title", newTitle);
       if (newImage) {
-        formData.append('image', newImage);
+        formData.append("image", newImage);
       }
 
       try {
         await editImage(formData);
-        console.log('Image updated successfully');
+        console.log("Image updated successfully");
         setShowEditModal(false);
         refetch();
       } catch (error) {
-        console.error('Error updating image:', error);
+        console.error("Error updating image:", error);
       }
     }
   };
@@ -77,53 +95,47 @@ const HomeScreen = () => {
   const handleDelete = async (imageId) => {
     try {
       await deleteImage(imageId);
-      console.log('Image deleted successfully');
+      console.log("Image deleted successfully");
       refetch();
     } catch (error) {
-      console.error('Error deleting image:', error);
+      console.error("Error deleting image:", error);
     }
   };
 
   const onDragEnd = async (result) => {
     const { destination, source } = result;
-  
+
     if (!destination) return;
     if (destination.index === source.index) return;
-  
+
     const reorderedImages = Array.from(uploadedImages.images);
     const [movedImage] = reorderedImages.splice(source.index, 1);
     reorderedImages.splice(destination.index, 0, movedImage);
-  
-    
-  
+
     setUploadedImagesState(reorderedImages);
-    const imageOrder = reorderedImages.map((img) => img._id); 
-  
+    const imageOrder = reorderedImages.map((img) => img._id);
+
     try {
-      await updateImageOrder({ newImageOrder: imageOrder }); 
-      console.log('Images reordered successfully');
+      await updateImageOrder({ newImageOrder: imageOrder });
+      console.log("Images reordered successfully");
       refetch();
     } catch (error) {
-      console.error('Error reordering images:', error);
+      console.error("Error reordering images:", error);
     }
   };
   useEffect(() => {
     if (uploadedImages && uploadedImages.images) {
-      setUploadedImagesState(uploadedImages.images); 
+      setUploadedImagesState(uploadedImages.images);
     }
   }, [uploadedImages]);
-  
 
   useEffect(() => {
-    refetch(); 
+    refetch();
   }, [refetch]);
 
   return (
     <Container>
-      <Button 
-        onClick={() => setShowUploadForm(true)} 
-        className="mb-3"
-      >
+      <Button onClick={() => setShowUploadForm(true)} className="mb-3">
         Upload Image
       </Button>
 
@@ -135,7 +147,7 @@ const HomeScreen = () => {
               <input
                 type="text"
                 placeholder="Enter title"
-                className='my-3'
+                className="my-3"
                 onChange={(e) => handleTitleChange(e, index)}
               />
             </div>
@@ -150,46 +162,65 @@ const HomeScreen = () => {
       ) : isError ? (
         <p>Error loading images</p>
       ) : (
-      <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="images">
-        {(provided) => (
-          <Row {...provided.droppableProps} ref={provided.innerRef}>
-          {uploadedImagesState?.map((image, index) => (
-            <Draggable key={image._id.toString()} draggableId={image._id.toString()} index={index}>
-              {(provided) => (
-                <Col 
-                  sm={12} md={6} lg={4} xl={3} 
-                  className="mb-4"
-                  ref={provided.innerRef}
-                  {...provided.draggableProps}
-                  {...provided.dragHandleProps} 
-                >
-                  <div className="image-container">
-                    <img src={`https://stock-image-platform.onrender.com/uploads/${image.fileName}`} alt={image.title} />
-                  </div>
-                  <div style={{display: "flex", justifyContent: "space-between"}}>
-                    <p>{image.title}</p>
-                    <div>
-                      <Button variant="link" onClick={() => handleEdit(image)}>
-                        <FaEdit /> 
-                      </Button>
-                      <Button variant="link" onClick={() => handleDelete(image._id)}>
-                        <FaTrash /> 
-                      </Button>
-                    </div>
-                  </div>
-                </Col>
-              )}
-            </Draggable>
-          ))}
-          {provided.placeholder}
-        </Row>
-        
-        )}
-      </Droppable>
-    </DragDropContext>
-  )}
-
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="images">
+            {(provided) => (
+              <Row {...provided.droppableProps} ref={provided.innerRef}>
+                {uploadedImagesState?.map((image, index) => (
+                  <Draggable
+                    key={image._id.toString()}
+                    draggableId={image._id.toString()}
+                    index={index}
+                  >
+                    {(provided) => (
+                      <Col
+                        sm={12}
+                        md={6}
+                        lg={4}
+                        xl={3}
+                        className="mb-4"
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <div className="image-container">
+                          <img
+                            src={`https://stock-image-platform.onrender.com/uploads/${image.fileName}`}
+                            alt={image.title}
+                          />
+                        </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <p>{image.title}</p>
+                          <div>
+                            <Button
+                              variant="link"
+                              onClick={() => handleEdit(image)}
+                            >
+                              <FaEdit />
+                            </Button>
+                            <Button
+                              variant="link"
+                              onClick={() => handleDelete(image._id)}
+                            >
+                              <FaTrash />
+                            </Button>
+                          </div>
+                        </div>
+                      </Col>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </Row>
+            )}
+          </Droppable>
+        </DragDropContext>
+      )}
 
       {editImageDetails && (
         <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
@@ -200,7 +231,7 @@ const HomeScreen = () => {
             <img
               src={`https://stock-image-platform.onrender.com/uploads/${editImageDetails.fileName}`}
               alt={editImageDetails.title}
-              style={{ width: '100%', marginBottom: '15px' }}
+              style={{ width: "100%", marginBottom: "15px" }}
             />
             <Form>
               <Form.Group controlId="formTitle">
