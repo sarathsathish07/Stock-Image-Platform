@@ -9,7 +9,6 @@ import {
 import { Row, Col, Container, Button, Form, Modal } from "react-bootstrap";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { toast } from 'react-toastify';
 
 const HomeScreen = () => {
   const [uploadedImagesState, setUploadedImagesState] = useState([]);
@@ -43,11 +42,7 @@ const HomeScreen = () => {
   };
 
   const handleUpload = async () => {
-    if (titles.some((title) => !title)) {
-      toast.error("Please provide titles for all images before uploading.", {
-      });
-      return; 
-    }
+    
     const formData = new FormData();
 
     newImages.forEach((image, index) => {
